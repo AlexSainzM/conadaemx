@@ -34,7 +34,7 @@ $(document).ready(function(){
         
         function makeTimer() {
 
-                var endTime = new Date("October 11, 2024 09:00:00 PDT");            
+                var endTime = new Date("November 28, 2024 08:00:00 PDT");            
                 var endTime = (Date.parse(endTime)) / 1000;
 
                 var now = new Date();
@@ -51,10 +51,10 @@ $(document).ready(function(){
                 if (minutes < "10") { minutes = "0" + minutes; }
                 if (seconds < "10") { seconds = "0" + seconds; }
 
-                $("#days").html(days + '<span class="camp">Days</span>');
-                $("#hours").html(hours + '<span class="camp">Hour</span>');
-                $("#minutes").html(minutes + '<span class="camp">Minute</span>');
-                $("#seconds").html(seconds + '<span class="camp">Second</span>');       
+                $("#days").html(days + '<span class="camp">Días</span>');
+                $("#hours").html(hours + '<span class="camp">Horas</span>');
+                $("#minutes").html(minutes + '<span class="camp">Minutos</span>');
+                $("#seconds").html(seconds + '<span class="camp">Segundos</span>');       
 
         }
         

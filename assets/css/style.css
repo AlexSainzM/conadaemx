@@ -108,8 +108,7 @@ h2 {
 
   @media (max-width: 600px) {
     .fh5co-home-banner h3 {
-      font-size: 18px;
-      
+      font-size: 14px;
     }
   }
 
@@ -150,7 +149,7 @@ h2 {
         width: 140px; } }
   @media (max-width: 600px) {
     .fh5co-home-banner a {
-      margin-top: 8px; }
+      margin-top: 2px; }
     .fh5co-home-banner h2 {
       font-size: 18px;
       max-width: 260px; }
@@ -807,7 +806,7 @@ footer {
   background-position: right bottom;
   background-repeat: no-repeat;
   background-size: cover; 
-  background: linear-gradient(black, white);
+  background: linear-gradient(black,#0059B1);
 }
 
 .text-muted {
@@ -824,7 +823,7 @@ footer {
       padding: 40px 0; } }
 
 .blog-content-inner {
-  background-color: rgba(255, 255, 255, 0.88);
+  background-color: #2F79BB42;
   
   /* background-color: #009d80; */
   padding: 70px;
@@ -849,7 +848,7 @@ footer {
 
 .single-blog {
   display: flex;
-  align-items: center;
+  align-items: start;
   margin-bottom: 50px; }
   .single-blog:last-child {
     margin-bottom: 0; }
