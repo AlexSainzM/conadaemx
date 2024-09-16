@@ -212,7 +212,7 @@
           <textarea class="form-control" placeholder="Compañía"></textarea> -->
           
           
-          <form class="needs-validation" action="" method="POST" id="formularioInscripcion" novalidate>
+          <form id="registro" class="needs-validation" action="https://formspree.io/f/mwpejzbj" method="POST" id="formularioInscripcion" novalidate>
 
             <hr class="my-4">
             
@@ -403,8 +403,67 @@
 
             <hr class="my-4">
 
-            <button type="button" style="color: #fff; background-color: #7EA5BF;">Enviar
+            <input type="text" id="idClienteoProv" name="idClienteoProv" style="display: none;">
+
+
+            <!-- Button trigger modal -->
+            <button type="button" class="" data-bs-toggle="modal" data-bs-target="#staticBackdrop" style="color:#fff; min-width: 200px;">
+              Registrarme ahora
             </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirmación del Registro</h1>
+                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                  </div>
+                  <div class="modal-body" id="">
+                      <!-- Contenedor con lo que se muestra al confirmar el registro -->
+                      <div id="qrContainerBefore">
+                        <h3 style="font-weight: bold;">Estas por generar tu registro</h3>
+                        <h3 style="color: gray;">Te pedimos revises con atención tus respuestas, si estás listo has clic en Registrarme ahora</h3>
+                        
+                      </div>
+
+                      <!-- Contenedor de espera respuesta del servidor -->
+                      <div id="qrContainerWait" style="display: none;">
+                        <h3 style="font-weight: bold;">Esperado respuesta del servidor...</h3>
+                        <h3 style="color: gray;"> Por favor espera un momento.</h3>
+                        
+                      </div>
+
+                      <!-- Contenedor para mostrar el código QR -->
+                      <div id="qrContainer" class="row" style="display:none;">
+                        <img src="./assets/img/LogoFFT.gif" alt="" class="col-6 offset-4" style="max-height: 50px; width: auto;" >
+                        <h3 style="font-weight: bold;">Has generado con exito tu registro para el nuestro Open House 2024:</h3>
+                        <div class="col-6 offset-2 col-sm-6 offset-sm-3" id="qrcode"></div>
+                        <h3 style="color: gray;" id="valorRegistroDOM"></h3>
+                        
+                        <h3 style="font-weight: bold; color: gray;">Toma un screenshot de esta pantalla o pulsa el botón descargar PDF para descargar tu confirmación.</h3>
+                        
+                        <h3 style="font-weight: bold; color: gray;">Hemos enviado un correo de confirmación. Revisa tu bandeja. Si no lo encuentras, revisa tu correo no deseado. Estaremos en contacto pronto.</h3>
+
+                        <h3 style="font-weight: bold; color: gray;">Ya puedes cerrar está página o recargar para ver nuevamente la información.</h3>
+                        
+
+
+
+                        <!-- <button type="button" id="downloadQR">Descargar QR</button> -->
+                        <button type="button" onclick="descargarPDF()" style="color: #fff;">Descargar como PDF</button>
+                      </div>
+
+                      
+
+                  </div>
+                  <div class="modal-footer">
+                    <button id="volveralFormulario" type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="color:#fff; background-color: rgb(189, 187, 187);">Volver al formualrio</button>
+                    <button id="registrarmeAhoraFinal" type="submit" class="btn btn-primary" style="color:#fff">Registrarme ahora</button>
+                  </div>
+                </div>
+              </div>
+            </div>
 
           </form>
 
@@ -431,6 +490,108 @@
   <script src="./assets2/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
   <script src="./assets/js/custom.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+
+  <script>
+    document.getElementById('registro').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevenir el comportamiento predeterminado del formulario
+
+      //Aquí generamos un ID unico para cada usuario
+      // Función para generar una ID única
+      function generarIdUnica() {
+          // Obtener la fecha y hora actual en milisegundos
+          const timestamp = Date.now().toString(36); // Conversión a base 36 para hacerlo más compacto
+          // Generar un número aleatorio
+          const randomNumber = Math.random().toString(36).substring(2, 10); // Recortar la parte decimal
+          // Combinar ambos para crear una ID
+          return `${timestamp}${randomNumber}`;
+      }
+
+      const idClienteoProv = document.getElementById("idClienteoProv");
+      idClienteoProv.value = generarIdUnica();
+
+      const volveralFormulario = document.getElementById("volveralFormulario");
+      const registrarmeAhoraFinal = document.getElementById("registrarmeAhoraFinal");
+      document.getElementById("qrContainerBefore").style.display = 'none';
+      document.getElementById("qrContainerWait").style.display = 'block';
+
+  
+      // Aquí enviarías el formulario a Formspree (esto es opcional, puedes usar AJAX si lo prefieres)
+      const formData = new FormData(this);
+      
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          // Datos para el QR: puedes incluir un ID único de registro o el nombre del usuario, por ejemplo
+          const qrData = idClienteoProv.value;
+
+          volveralFormulario.disabled = true;
+          registrarmeAhoraFinal.disabled = true;
+          
+          // Generar el QR
+          document.getElementById("qrContainerBefore").style.display = 'none';
+          document.getElementById("qrContainerWait").style.display = 'none';
+          document.getElementById('qrContainer').style.display = 'block';
+          document.getElementById("valorRegistroDOM").innerHTML = `${idClienteoProv.value}`;
+          const qrCode = new QRCode(document.getElementById('qrcode'), {
+            text: qrData,
+            width: 200,
+            height: 200
+          });
+  
+          // Agregar funcionalidad para descargar el QR
+          const downloadButton = document.getElementById('downloadQR');
+          downloadButton.addEventListener('click', function() {
+            const qrCanvas = document.querySelector('#qrcode canvas');
+            const qrUrl = qrCanvas.toDataURL("image/png");
+            const a = document.createElement('a');
+            a.href = qrUrl;
+            a.download = 'qr_registro.png';
+            a.click();
+          });
+        } else {
+          alert('Hubo un problema al enviar el formulario.');
+        }
+      });
+    });
+  </script>
+
+  <!-- <script>
+    function descargarPDF() {
+      var elemento = document.getElementById('contenidoPDFRegistro');
+      html2pdf()
+        .from(elemento)
+        .save();
+    }
+  </script> -->
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+  async function descargarPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Capturar el contenido del div usando html2canvas
+    const elemento = document.getElementById('qrContainer');
+    const canvas = await html2canvas(elemento, { scale: 2 });
+    const imgData = canvas.toDataURL('image/png');
+
+    // Agregar la imagen al PDF
+    doc.addImage(imgData, 'PNG', 20, 20, 140, 200);
+    doc.save('documento.pdf');
+  }
+</script>
 
 </body>
 </html>
